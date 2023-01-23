@@ -1,0 +1,25 @@
+service: aws-node-http-api-project
+frameworkVersion: "3"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dynamodb-local
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  getUser:
+    handler: lib/user/controller.getUser
+    events:
+      - httpApi:
+          path: /
+          method: get
+  registerUser:
+    handler: lib/user/register-user/controller.register
+    events:
+      - httpApi:
+          path: /register
+          method: post
