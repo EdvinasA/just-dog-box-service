@@ -1,7 +1,8 @@
 import * as _ from 'lodash'
 import {
-  CreateTableCommandInput
+  CreateTableCommandInput, ScanOutput
 } from "@aws-sdk/client-dynamodb"
+import { getAllItems, getByEmail } from '../shared/database';
 
 export const params: CreateTableCommandInput = {
   AttributeDefinitions: [
@@ -25,12 +26,20 @@ export const params: CreateTableCommandInput = {
 
 export async function getUser(event, context, callback) {
 
-  
+  let data: ScanOutput = {}
+
+  // await getAllItems('Users').then((output) => {
+  //   data = output
+  // });
+
+  await getByEmail('Users', 'edvinasalimas98@gmail.com').then((output) => {
+    data = output
+  });
 
   const response = {
     statusCode: 200,
     body: JSON.stringify({
-      input: event.body
+      input: data
     }),
   };
 
