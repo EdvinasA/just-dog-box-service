@@ -1,6 +1,5 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
 import { compareSync } from 'bcrypt';
-import { User } from '../../schemas/model';
 import { signToken } from '../../shared/authorization';
 import { getByEmail } from '../../shared/database';
 
