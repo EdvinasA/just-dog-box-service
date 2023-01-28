@@ -23,3 +23,9 @@ functions:
       - httpApi:
           path: /register
           method: post
+  loginUser:
+    handler: lib/user/login/controller.login
+    events:
+      - httpApi:
+          path: /login
+          method: post
