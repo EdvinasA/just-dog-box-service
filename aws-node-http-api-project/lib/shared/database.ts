@@ -1,14 +1,9 @@
 import {
-    DynamoDBClient,
-    ScanOutput,
-    PutItemInput,
-    AttributeValue
+    ScanOutput
 } from "@aws-sdk/client-dynamodb";
 import { DynamoDB } from "aws-sdk";
-import { PutItemInputAttributeMap } from "aws-sdk/clients/dynamodb";
 
 const ddb = new DynamoDB.DocumentClient({ region: 'fake', endpoint: 'http://localhost:8777' });
-const client = new DynamoDBClient({ region: 'fake', endpoint: 'http://localhost:8777' });
 
 
 export const getAllItems = async (tableName: string): Promise<ScanOutput> => {
@@ -19,8 +14,9 @@ export const getAllItems = async (tableName: string): Promise<ScanOutput> => {
     let defaultReponse: ScanOutput = {}
 
     try {
-        const data = await ddb.scan(parameters).promise();
-        return data;
+        await ddb.scan(parameters).promise().then((response: ScanOutput) => {
+            return response;
+        });
     } catch (err) {
         console.error(err);
     }
@@ -39,8 +35,9 @@ export const getByEmail = async (tableName: string, email: string) => {
     let defaultReponse: ScanOutput = {}
 
     try {
-        const data = await ddb.get(parameters).promise();
-        return data;
+        await ddb.get(parameters).promise().then((response: ScanOutput) => {
+            return response;
+        });
     } catch (err) {
         console.error(err);
     }
@@ -48,8 +45,8 @@ export const getByEmail = async (tableName: string, email: string) => {
     return Promise.resolve(defaultReponse);
 }
 
-export const putItem = async (tableName: string | undefined, itemToPost: any | undefined) => {
-    const parameters: PutItemInput = {
+export const postItem = async (tableName: string, itemToPost: any) => {
+    const parameters = {
         TableName: tableName,
         Item: itemToPost
     };
@@ -57,8 +54,9 @@ export const putItem = async (tableName: string | undefined, itemToPost: any | u
     let defaultReponse: ScanOutput = {}
 
     try {
-        const data = await ddb.put(parameters).promise();
-        return data;
+        await ddb.put(parameters).promise().then((response: ScanOutput) => {
+            return response;
+        });
     } catch (err) {
         console.error(err);
     }
