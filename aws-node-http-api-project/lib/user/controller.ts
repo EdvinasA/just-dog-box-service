@@ -1,17 +1,17 @@
-import * as _ from 'lodash'
+import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
 import {
   CreateTableCommandInput, ScanOutput
 } from "@aws-sdk/client-dynamodb"
-import { getAllItems, getByEmail } from '../shared/database';
+import { getByEmail } from '../shared/database';
 
 export const params: CreateTableCommandInput = {
   AttributeDefinitions: [
-    { AttributeName: "FullName", AttributeType: "S", },
-    { AttributeName: "Email", AttributeType: "S", },
+    { AttributeName: "fullName", AttributeType: "S", },
+    { AttributeName: "email", AttributeType: "S", },
   ],
   KeySchema: [
-    { AttributeName: "Email", KeyType: "HASH", },
-    { AttributeName: "FullName", KeyType: "RANGE", },
+    { AttributeName: "email", KeyType: "HASH", },
+    { AttributeName: "fullName", KeyType: "RANGE", },
   ],
   ProvisionedThroughput: {
     ReadCapacityUnits: 1,
@@ -24,13 +24,8 @@ export const params: CreateTableCommandInput = {
   BillingMode: "PAY_PER_REQUEST"
 };
 
-export async function getUser(event, context, callback) {
-
+export async function getUser(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
   let data: ScanOutput = {}
-
-  // await getAllItems('Users').then((output) => {
-  //   data = output
-  // });
 
   await getByEmail('Users', 'edvinasalimas98@gmail.com').then((output) => {
     data = output

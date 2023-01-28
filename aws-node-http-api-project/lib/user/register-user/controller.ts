@@ -1,3 +1,4 @@
+import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
 import { postItem } from '../../shared/database';
 
 type RegisterForm = {
@@ -6,7 +7,7 @@ type RegisterForm = {
     password: string;
 }
 
-export async function register(event, context, callback) {
+export async function register(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
     const parsedBody: RegisterForm = JSON.parse(event.body);
 
     await postItem('Users', parsedBody);

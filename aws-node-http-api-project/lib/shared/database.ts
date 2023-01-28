@@ -14,9 +14,7 @@ export const getAllItems = async (tableName: string): Promise<ScanOutput> => {
     let defaultReponse: ScanOutput = {}
 
     try {
-        await ddb.scan(parameters).promise().then((response: ScanOutput) => {
-            return response;
-        });
+        return await ddb.scan(parameters).promise();
     } catch (err) {
         console.error(err);
     }
@@ -35,9 +33,7 @@ export const getByEmail = async (tableName: string, email: string) => {
     let defaultReponse: ScanOutput = {}
 
     try {
-        await ddb.get(parameters).promise().then((response: ScanOutput) => {
-            return response;
-        });
+        return await ddb.get(parameters).promise();
     } catch (err) {
         console.error(err);
     }
@@ -51,15 +47,9 @@ export const postItem = async (tableName: string, itemToPost: any) => {
         Item: itemToPost
     };
 
-    let defaultReponse: ScanOutput = {}
-
     try {
-        await ddb.put(parameters).promise().then((response: ScanOutput) => {
-            return response;
-        });
+        await ddb.put(parameters).promise();
     } catch (err) {
         console.error(err);
     }
-
-    return Promise.resolve(defaultReponse);
 }
