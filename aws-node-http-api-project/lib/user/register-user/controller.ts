@@ -1,5 +1,7 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { postItem } from '../../shared/database';
+import { genSaltSync, hashSync } from 'bcrypt';
+import { signToken } from '../../shared/authorization';
+import { getByEmail, postItem } from '../../shared/database';
 
 type RegisterForm = {
     fullName: string;
@@ -10,14 +12,29 @@ type RegisterForm = {
 export async function register(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
     const parsedBody: RegisterForm = JSON.parse(event.body);
 
-    await postItem('Users', parsedBody);
+    await getByEmail('Users', parsedBody.email).then((user) => {
+        // @ts-ignore
+        if (user.Item) {
+            throw Error('User exist!');
+        }
+    });
 
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-            input: event
-        }),
-    };
+    const salt = await genSaltSync(10);
+    const hashed = await hashSync(parsedBody.password, salt)
 
-    callback(null, response);
+    await postItem('Users', { email: parsedBody.email, fullName: parsedBody.fullName, password: hashed })
+        .then(() => {
+            return signToken(parsedBody.email, parsedBody.fullName);
+        })
+        .then((token: string) => {
+            const response = {
+                statusCode: 200,
+                body: JSON.stringify({ token }),
+            };
+
+            callback(null, response);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 }

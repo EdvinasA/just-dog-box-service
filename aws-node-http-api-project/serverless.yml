@@ -15,7 +15,7 @@ functions:
     handler: lib/user/controller.getUser
     events:
       - httpApi:
-          path: /
+          path: /{email}
           method: get
   registerUser:
     handler: lib/user/register-user/controller.register

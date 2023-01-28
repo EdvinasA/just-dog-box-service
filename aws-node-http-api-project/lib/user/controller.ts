@@ -27,15 +27,14 @@ export const params: CreateTableCommandInput = {
 export async function getUser(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
   let data: ScanOutput = {}
 
-  await getByEmail('Users', 'edvinasalimas98@gmail.com').then((output) => {
-    data = output
+  await getByEmail('Users', event.pathParameters.email).then((output) => {
+    //@ts-ignore
+    data = output.Item
   });
 
   const response = {
     statusCode: 200,
-    body: JSON.stringify({
-      input: data
-    }),
+    body: JSON.stringify(data)
   };
 
   callback(null, response);

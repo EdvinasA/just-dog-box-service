@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs-then';
 
 export const signToken = (id) => {
     return jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -48,14 +47,14 @@ export const checkIfInputIsValid = (eventBody) => {
 //         .then(token => ({ auth: true, token: token }));
 // }
 
-export const comparePassword = (eventPassword, userPassword, userId) => {
-    return bcrypt.compare(eventPassword, userPassword)
-        .then(passwordIsValid =>
-            !passwordIsValid
-                ? Promise.reject(new Error('The credentials do not match.'))
-                : signToken(userId)
-        );
-}
+// export const comparePassword = (eventPassword, userPassword, userId) => {
+//     return bcrypt.compare(eventPassword, userPassword)
+//         .then(passwordIsValid =>
+//             !passwordIsValid
+//                 ? Promise.reject(new Error('The credentials do not match.'))
+//                 : signToken(userId)
+//         );
+// }
 
 // export const me = (userId) => {
 //     return User.findById(userId, { password: 0 })
