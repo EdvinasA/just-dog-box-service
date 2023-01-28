@@ -1,5 +1,5 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { hashPassword, signToken } from '../../shared/authorization';
+import { signToken } from '../../shared/authorization';
 import { getByEmail, postItem } from '../../shared/database';
 
 type RegisterForm = {
@@ -23,9 +23,7 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
         }
     });
 
-    const hashed = await hashPassword(parsedBody.password);
-
-    await postItem('Users', { email: parsedBody.email, fullName: parsedBody.fullName, password: hashed })
+    await postItem('Users', { email: parsedBody.email, fullName: parsedBody.fullName, password: parsedBody.password })
         .then(() => {
             return signToken(parsedBody.email, parsedBody.fullName);
         })
