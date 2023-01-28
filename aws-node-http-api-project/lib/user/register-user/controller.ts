@@ -1,6 +1,5 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { genSaltSync, hashSync } from 'bcrypt';
-import { signToken } from '../../shared/authorization';
+import { hashPassword, signToken } from '../../shared/authorization';
 import { getByEmail, postItem } from '../../shared/database';
 
 type RegisterForm = {
@@ -15,12 +14,16 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
     await getByEmail('Users', parsedBody.email).then((user) => {
         // @ts-ignore
         if (user.Item) {
-            throw Error('User exist!');
+            const response = {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Use already exist!' }),
+            };
+
+            callback(null, response);
         }
     });
 
-    const salt = await genSaltSync(10);
-    const hashed = await hashSync(parsedBody.password, salt)
+    const hashed = await hashPassword(parsedBody.password);
 
     await postItem('Users', { email: parsedBody.email, fullName: parsedBody.fullName, password: hashed })
         .then(() => {
@@ -35,6 +38,11 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
             callback(null, response);
         })
         .catch((err) => {
-            console.error(err);
+            const response = {
+                statusCode: 500,
+                body: JSON.stringify({ err }),
+            };
+
+            callback(null, response);
         });
 }
