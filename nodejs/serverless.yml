@@ -5,16 +5,12 @@ plugins:
   - serverless-plugin-typescript
   - serverless-dynamodb-local
   - serverless-offline
-  - serverless-plugin-include-dependencies
 
 provider:
   name: aws
   stage: dev
   region: eu-west-1
-  runtime: nodejs16.x
-
-package:
-  excludeDevDependencies: false
+  runtime: nodejs18.x
 
 resources:
   Resources:
