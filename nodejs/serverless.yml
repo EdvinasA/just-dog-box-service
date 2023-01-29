@@ -30,6 +30,19 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    SubscriptionToEmail:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: SubscriptionsToEmail
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 functions:
   getUser:
@@ -49,4 +62,10 @@ functions:
     events:
       - httpApi:
           path: /login
+          method: post
+  subscribeToEmail:
+    handler: lib/user/subscription/controller.subscribe
+    events:
+      - httpApi:
+          path: /subscribe
           method: post

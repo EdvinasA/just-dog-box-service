@@ -1,37 +1,38 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { signToken } from '../../shared/authorization';
+import { v4 as uuidv4 } from 'uuid';
 import { getByEmail, postItem } from '../../shared/database';
 import { ServiceResponse } from '../../shared/models';
 
-type RegisterForm = {
-    fullName: string;
+type SubscribeToEmailForm = {
     email: string;
-    password: string;
 }
 
-export async function register(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
-    const parsedBody: RegisterForm = JSON.parse(event.body);
+export async function subscribe(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
+    const generatedUUID = await uuidv4();
 
-    await getByEmail('Users', parsedBody.email).then((user) => {
+    const input: SubscribeToEmailForm = JSON.parse(event.body);
+
+    let response: ServiceResponse = {
+        statusCode: 200,
+        body: {}
+    };
+
+    await getByEmail('SubscriptionsToEmail', input.email).then((email) => {
         // @ts-ignore
-        if (user.Item) {
+        if (email.Item) {
             const response: ServiceResponse = {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Use already exist' }),
+                body: JSON.stringify({ error: 'Email is already added to subscription list!' }),
             };
-
             callback(null, response);
         }
     });
 
-    await postItem('Users', { email: parsedBody.email, fullName: parsedBody.fullName, password: parsedBody.password })
+    await postItem('SubscriptionsToEmail', { id: generatedUUID, email: input.email })
         .then(() => {
-            return signToken(parsedBody.email, parsedBody.fullName);
-        })
-        .then((token: string) => {
             const response: ServiceResponse = {
                 statusCode: 200,
-                body: JSON.stringify({ token }),
+                body: JSON.stringify({ message: 'Email added!' }),
             };
 
             callback(null, response);
@@ -44,4 +45,6 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
 
             callback(null, response);
         });
+
+    callback(null, response);
 }
