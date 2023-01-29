@@ -37,7 +37,26 @@ export const getByEmail = async (tableName: string, email: string) => {
     } catch (err) {
         console.error(err);
     }
+    return Promise.resolve(defaultReponse);
+}
 
+export const getByField = async (tableName: string, fieldName: string, fieldValue: string) => {
+    let defaultReponse: ScanOutput = {}
+
+    try {
+        return await ddb
+            .query({
+                TableName: tableName,
+                KeyConditionExpression: `${fieldName} = :a`,
+                ExpressionAttributeValues: {
+                    ":a": `${fieldValue}`
+                }
+
+            })
+            .promise();;
+    } catch (err) {
+        console.error(err);
+    }
     return Promise.resolve(defaultReponse);
 }
 

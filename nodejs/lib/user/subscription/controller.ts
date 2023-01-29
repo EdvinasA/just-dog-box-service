@@ -1,6 +1,6 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
 import { v4 as uuidv4 } from 'uuid';
-import { getByEmail, postItem } from '../../shared/database';
+import { getByEmail, getByField, postItem } from '../../shared/database';
 import { ServiceResponse } from '../../shared/models';
 
 type SubscribeToEmailForm = {
@@ -14,36 +14,24 @@ export async function subscribe(event: APIGatewayEvent, context: Context, callba
 
     let response: ServiceResponse = {
         statusCode: 200,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
-        },
         body: {}
     };
 
-    await getByEmail('SubscriptionsToEmail', input.email).then((email) => {
+    await getByEmail('SubscriptionToEmail', input.email).then((response) => {
         // @ts-ignore
-        if (email.Item) {
+        if (response.Item) {
             const response: ServiceResponse = {
                 statusCode: 400,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': true
-                },
-                body: JSON.stringify({ error: 'Email is already added to subscription list!' }),
+                body: JSON.stringify({ error: 'Email is already added to subscription list' }),
             };
             callback(null, response);
         }
     });
 
-    await postItem('SubscriptionsToEmail', { id: generatedUUID, email: input.email })
+    await postItem('SubscriptionToEmail', { id: generatedUUID, email: input.email })
         .then(() => {
             const response: ServiceResponse = {
                 statusCode: 200,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': true
-                },
                 body: JSON.stringify({ message: 'Email added!' }),
             };
 
@@ -52,10 +40,6 @@ export async function subscribe(event: APIGatewayEvent, context: Context, callba
         .catch((error) => {
             const response: ServiceResponse = {
                 statusCode: 500,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': true
-                },
                 body: JSON.stringify({ error }),
             };
 

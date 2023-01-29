@@ -8,15 +8,11 @@ type LoginForm = {
 }
 
 export async function login(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
-    const input: LoginForm = JSON.parse(event.body);
+    const input: LoginForm = await JSON.parse(event.body);
 
     let response = {
         statusCode: 400,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
-        },
-        body: {}
+        body: JSON.stringify({})
     };
 
     let data: any = {};
@@ -30,10 +26,6 @@ export async function login(event: APIGatewayEvent, context: Context, callback: 
         const token = await signToken(input.email, input.password);
         response = {
             statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': true
-            },
             body: JSON.stringify({ token })
         };
     }
