@@ -57,15 +57,29 @@ functions:
       - httpApi:
           path: /register
           method: post
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: true
   loginUser:
     handler: lib/user/login/controller.login
     events:
       - httpApi:
           path: /login
           method: post
+          cors:
+            origin: "*"
   subscribeToEmail:
     handler: lib/user/subscription/controller.subscribe
     events:
       - httpApi:
           path: /subscribe
           method: post
+          cors:
+            origin: "*"

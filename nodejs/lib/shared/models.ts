@@ -1,4 +1,5 @@
 export type ServiceResponse = {
-    statusCode: number
-    body: any
+    statusCode: number;
+    headers: object;
+    body: any;
 };

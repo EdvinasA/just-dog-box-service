@@ -12,6 +12,10 @@ export async function login(event: APIGatewayEvent, context: Context, callback: 
 
     let response = {
         statusCode: 400,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+        },
         body: {}
     };
 
@@ -26,6 +30,10 @@ export async function login(event: APIGatewayEvent, context: Context, callback: 
         const token = await signToken(input.email, input.password);
         response = {
             statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Credentials': true
+            },
             body: JSON.stringify({ token })
         };
     }

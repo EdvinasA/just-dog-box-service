@@ -17,6 +17,10 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
         if (user.Item) {
             const response: ServiceResponse = {
                 statusCode: 400,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true
+                },
                 body: JSON.stringify({ error: 'Use already exist' }),
             };
 
@@ -31,6 +35,10 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
         .then((token: string) => {
             const response: ServiceResponse = {
                 statusCode: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true
+                },
                 body: JSON.stringify({ token }),
             };
 
@@ -39,6 +47,10 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
         .catch((error) => {
             const response: ServiceResponse = {
                 statusCode: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true
+                },
                 body: JSON.stringify({ error }),
             };
 

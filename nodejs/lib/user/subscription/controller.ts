@@ -14,6 +14,10 @@ export async function subscribe(event: APIGatewayEvent, context: Context, callba
 
     let response: ServiceResponse = {
         statusCode: 200,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+        },
         body: {}
     };
 
@@ -22,6 +26,10 @@ export async function subscribe(event: APIGatewayEvent, context: Context, callba
         if (email.Item) {
             const response: ServiceResponse = {
                 statusCode: 400,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true
+                },
                 body: JSON.stringify({ error: 'Email is already added to subscription list!' }),
             };
             callback(null, response);
@@ -32,6 +40,10 @@ export async function subscribe(event: APIGatewayEvent, context: Context, callba
         .then(() => {
             const response: ServiceResponse = {
                 statusCode: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true
+                },
                 body: JSON.stringify({ message: 'Email added!' }),
             };
 
@@ -40,6 +52,10 @@ export async function subscribe(event: APIGatewayEvent, context: Context, callba
         .catch((error) => {
             const response: ServiceResponse = {
                 statusCode: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true
+                },
                 body: JSON.stringify({ error }),
             };
 

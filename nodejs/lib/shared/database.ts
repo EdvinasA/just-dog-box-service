@@ -3,8 +3,8 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { DynamoDB } from "aws-sdk";
 
-const ddb = new DynamoDB.DocumentClient({ region: 'eu-west-1', endpoint: 'http://localhost:8777/' });
-
+const ddb = process.env.ENDPOINT !== '' ? new DynamoDB.DocumentClient({ region: process.env.REGION, endpoint: process.env.ENDPOINT })
+    : new DynamoDB.DocumentClient({ region: process.env.REGION });
 
 export const getAllItems = async (tableName: string): Promise<ScanOutput> => {
     const parameters = {
