@@ -1,43 +1,22 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
 import {
-  CreateTableCommandInput, ScanOutput
+  ScanOutput
 } from "@aws-sdk/client-dynamodb"
 import { getByEmail } from '../shared/database';
-
-export const params: CreateTableCommandInput = {
-  AttributeDefinitions: [
-    { AttributeName: "fullName", AttributeType: "S", },
-    { AttributeName: "email", AttributeType: "S", },
-  ],
-  KeySchema: [
-    { AttributeName: "email", KeyType: "HASH", },
-    { AttributeName: "fullName", KeyType: "RANGE", },
-  ],
-  ProvisionedThroughput: {
-    ReadCapacityUnits: 1,
-    WriteCapacityUnits: 1,
-  },
-  TableName: "Users",
-  StreamSpecification: {
-    StreamEnabled: false,
-  },
-  BillingMode: "PAY_PER_REQUEST"
-};
+import { verifyToken } from '../shared/authorization';
 
 export async function getUser(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
   let data: ScanOutput = {}
+  const tokenData = await verifyToken(event.headers.authorization);
 
-  await getByEmail('Users', event.pathParameters.email).then((output) => {
+  await getByEmail('Users', tokenData.email).then((output) => {
     //@ts-ignore
     data = output.Item
   });
 
+
   const response = {
     statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true
-  },
     body: JSON.stringify(data)
   };
 

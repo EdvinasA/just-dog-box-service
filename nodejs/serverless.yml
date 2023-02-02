@@ -49,7 +49,7 @@ functions:
     handler: lib/user/controller.getUser
     events:
       - httpApi:
-          path: /{email}
+          path: /
           method: get
   registerUser:
     handler: lib/user/register-user/controller.register
