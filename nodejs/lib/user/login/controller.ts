@@ -23,7 +23,7 @@ export async function login(event: APIGatewayEvent, context: Context, callback: 
     });
 
     if ((input.password === data.password) && (input.email === data.email)) {
-        const token = await signToken(input.email, input.password);
+        const token = await signToken(input.email);
         response = {
             statusCode: 200,
             body: JSON.stringify({ token })

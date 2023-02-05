@@ -1,7 +1,7 @@
 import { sign, verify } from 'jsonwebtoken';
 
-export const signToken = async (email: string, fullName: string) => {
-    return sign({ email: email, fullName: fullName }, 'secret', {
+export const signToken = async (email: string) => {
+    return sign({ email: email }, 'secret', {
         expiresIn: 86400 // expires in 24 hours
     });
 }

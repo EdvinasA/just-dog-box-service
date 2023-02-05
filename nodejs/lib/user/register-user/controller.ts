@@ -4,7 +4,8 @@ import { getByEmail, postItem } from '../../shared/database';
 import { ServiceResponse } from '../../shared/models';
 
 type RegisterForm = {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
 }
@@ -24,9 +25,10 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
         }
     });
 
-    await postItem('Users', { email: parsedBody.email, fullName: parsedBody.fullName, password: parsedBody.password })
+    await postItem('Users', { email: parsedBody.email, firstName: parsedBody.firstName, lastName: parsedBody.lastName, password: parsedBody.password,
+        address: '', age: ''  })
         .then(() => {
-            return signToken(parsedBody.email, parsedBody.fullName);
+            return signToken(parsedBody.email);
         })
         .then((token: string) => {
             const response: ServiceResponse = {
