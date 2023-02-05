@@ -10,7 +10,7 @@ type RegisterForm = {
     password: string;
 }
 
-export async function register(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
+export async function update(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
     const parsedBody: RegisterForm = JSON.parse(event.body);
 
     await getByEmail('Users', parsedBody.email).then((user) => {

@@ -69,3 +69,9 @@ functions:
       - httpApi:
           path: /subscribe
           method: post
+  updateUser:
+    handler: lib/user/update-user/controller.updateUser
+    events:
+      - httpApi:
+          path: /update
+          method: post
