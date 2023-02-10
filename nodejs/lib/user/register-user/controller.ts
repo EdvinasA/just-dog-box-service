@@ -1,5 +1,5 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { signToken } from '../../shared/authorization';
+import { encryptData, signToken } from '../../shared/authorization';
 import { getByEmail, postItem } from '../../shared/database';
 import { ServiceResponse } from '../../shared/models';
 
@@ -25,7 +25,7 @@ export async function update(event: APIGatewayEvent, context: Context, callback:
         }
     });
 
-    await postItem('Users', { email: parsedBody.email, firstName: parsedBody.firstName, lastName: parsedBody.lastName, password: parsedBody.password,
+    await postItem('Users', { email: parsedBody.email, firstName: parsedBody.firstName, lastName: parsedBody.lastName, password: await encryptData(parsedBody.password),
         address: '', age: ''  })
         .then(() => {
             return signToken(parsedBody.email);

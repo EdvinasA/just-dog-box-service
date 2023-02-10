@@ -1,5 +1,5 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { signToken } from '../../shared/authorization';
+import { compareEncryptedData, signToken } from '../../shared/authorization';
 import { getByEmail } from '../../shared/database';
 
 type LoginForm = {
@@ -8,7 +8,7 @@ type LoginForm = {
 }
 
 export async function login(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
-    const input: LoginForm = await JSON.parse(event.body);
+    const input: LoginForm = JSON.parse(event.body);
 
     let response = {
         statusCode: 400,
@@ -22,7 +22,7 @@ export async function login(event: APIGatewayEvent, context: Context, callback: 
         data = output.Item
     });
 
-    if ((input.password === data.password) && (input.email === data.email)) {
+    if (await compareEncryptedData(input.password, data.password) && (input.email === data.email)) {
         const token = await signToken(input.email);
         response = {
             statusCode: 200,

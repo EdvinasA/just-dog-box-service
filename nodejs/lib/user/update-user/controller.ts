@@ -21,6 +21,7 @@ export async function updateUser(event: APIGatewayEvent, context: Context, callb
 
     await postItem('Users', {
         email: user.email,
+        password: user.password,
         firstName: parsedBody.firstName,
         lastName: parsedBody.lastName,
         address: parsedBody.address,
