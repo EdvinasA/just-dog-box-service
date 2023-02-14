@@ -1,5 +1,5 @@
 import { sign, verify } from 'jsonwebtoken';
-import { genSaltSync, hashSync, compareSync } from 'bcrypt';
+import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
 
 export const signToken = async (email: string) => {
     return sign({ email: email }, 'secret', {

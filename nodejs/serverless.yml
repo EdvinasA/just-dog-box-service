@@ -74,4 +74,4 @@ functions:
     events:
       - httpApi:
           path: /update
-          method: post
+          method: put
