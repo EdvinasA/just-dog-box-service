@@ -8,7 +8,11 @@ export const signToken = async (email: string) => {
 }
 
 export const verifyToken = async (token: string) => {
-    return await verify(token, 'secret');
+    try {
+        return await verify(token, 'secret');
+    } catch (error) {
+        return null;
+    }
 }
 
 export const encryptData = async (value: string) => {

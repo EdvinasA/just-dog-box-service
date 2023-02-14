@@ -1,5 +1,6 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
+import { ServiceResponse } from './models';
 
 const defaultValidatorOptions = {
     forbidNonWhitelisted: true,
@@ -64,3 +65,11 @@ export async function validateObject<T extends object>(
 const isJson = (requestBody: unknown): boolean => {
     return typeof requestBody === 'object';
 };
+
+export const defaultResponseGet = (): ServiceResponse => {
+    return { statusCode: 204, body: JSON.stringify({}) };
+}
+
+export const defaultResponseGetSuccess = (body: any): ServiceResponse => {
+    return { statusCode: 200, body: JSON.stringify(body) };
+}
