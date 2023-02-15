@@ -75,3 +75,9 @@ functions:
       - httpApi:
           path: /update
           method: put
+  changePassword:
+    handler: lib/user/change-password/controller.changePassword
+    events:
+      - httpApi:
+          path: /password
+          method: put

@@ -70,6 +70,10 @@ export const defaultResponseGet = (): ServiceResponse => {
     return { statusCode: 204, body: JSON.stringify({}) };
 }
 
+export const defaultResponsePut = (): ServiceResponse => {
+    return { statusCode: 200 };
+}
+
 export const defaultResponseGetSuccess = (body: any): ServiceResponse => {
     return { statusCode: 200, body: JSON.stringify(body) };
 }

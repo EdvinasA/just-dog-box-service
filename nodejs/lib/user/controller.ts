@@ -1,7 +1,4 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import {
-  ScanOutput
-} from "@aws-sdk/client-dynamodb"
 
 import { getByEmail } from '../shared/database';
 import { verifyToken } from '../shared/authorization';

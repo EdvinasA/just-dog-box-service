@@ -1,4 +1,4 @@
 export type ServiceResponse = {
     statusCode: number;
-    body: any;
+    body?: any;
 };
