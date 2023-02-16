@@ -1,19 +1,12 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { ValidationError } from 'class-validator';
-import { compareEncryptedData, encryptData, signToken, verifyToken } from '../../shared/authorization';
+import { compareEncryptedData, encryptData, verifyToken } from '../../shared/authorization';
 import { getByEmail, postItem } from '../../shared/database';
 import { ServiceResponse } from '../../shared/models';
 import { defaultResponsePut, returnErrorsIfInvalid } from '../../shared/validation';
 import { ChangePasswordFormClass } from './request';
 
-type ChangePasswordForm = {
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
-}
-
 export async function changePassword(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
-    const parsedBody: ChangePasswordForm = JSON.parse(event.body);
+    const parsedBody: ChangePasswordFormClass = JSON.parse(event.body);
 
     await returnErrorsIfInvalid(parsedBody, ChangePasswordFormClass, callback);
 

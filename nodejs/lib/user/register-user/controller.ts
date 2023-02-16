@@ -2,16 +2,13 @@ import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
 import { encryptData, signToken } from '../../shared/authorization';
 import { getByEmail, postItem } from '../../shared/database';
 import { ServiceResponse } from '../../shared/models';
-
-type RegisterForm = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-}
+import { returnErrorsIfInvalid } from '../../shared/validation';
+import { RegisterForm } from './request';
 
 export async function register(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
     const parsedBody: RegisterForm = JSON.parse(event.body);
+
+    await returnErrorsIfInvalid(parsedBody, RegisterForm, callback);
 
     await getByEmail('Users', parsedBody.email).then((user) => {
         // @ts-ignore
@@ -25,8 +22,14 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
         }
     });
 
-    await postItem('Users', { email: parsedBody.email, firstName: parsedBody.firstName, lastName: parsedBody.lastName, password: await encryptData(parsedBody.password),
-        address: '', age: ''  })
+    await postItem('Users', {
+        email: parsedBody.email,
+        firstName: parsedBody.firstName,
+        lastName: parsedBody.lastName,
+        password: await encryptData(parsedBody.password),
+        address: '',
+        age: ''
+    })
         .then(() => {
             return signToken(parsedBody.email);
         })
