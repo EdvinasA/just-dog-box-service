@@ -1,5 +1,7 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
+import { APIGatewayProxyCallback } from 'aws-lambda';
+
 import { ServiceResponse } from './models';
 
 const defaultValidatorOptions = {
@@ -12,23 +14,13 @@ const defaultValidatorOptions = {
 /**
  * Validates request body and sets context error status and messages
  */
-export async function updateResponseContextWithValidation<T extends object>(
-    context: any,
+export async function returnErrorsIfInvalid<T extends object>(
     requestBody: unknown,
     targetClass: ClassConstructor<T>,
-    validatorOptions?: ValidatorOptions
+    callback: APIGatewayProxyCallback
 ): Promise<void> {
-    if (!requestBody || !isJson(requestBody)) {
-        context.res = {
-            status: 400,
-            body: 'Malformed request',
-        };
-        return;
-    }
-
     const options = {
-        defaultValidatorOptions,
-        ...validatorOptions,
+        ...defaultValidatorOptions
     };
 
     const errors: ValidationError[] = await validateObject(
@@ -38,11 +30,9 @@ export async function updateResponseContextWithValidation<T extends object>(
     );
 
     if (errors.length > 0) {
-        context.res = {
-            status: 400,
-            body: errors,
-        };
+        callback(null, { statusCode: 400, body: JSON.stringify(errors) });
     }
+    return;
 }
 
 export async function validateObject<T extends object>(
@@ -52,12 +42,7 @@ export async function validateObject<T extends object>(
 ): Promise<ValidationError[]> {
     const request = plainToInstance(targetClass, requestBody);
 
-    const options = {
-        defaultValidatorOptions,
-        ...validatorOptions,
-    };
-
-    const errors: ValidationError[] = await validate(request, options);
+    const errors: ValidationError[] = await validate(request, validatorOptions);
 
     return errors;
 }
