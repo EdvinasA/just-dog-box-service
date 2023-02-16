@@ -1,18 +1,15 @@
 import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
-import { signToken, verifyToken } from '../../shared/authorization';
+import { verifyToken } from '../../shared/authorization';
 import { getByEmail, postItem } from '../../shared/database';
 import { ServiceResponse } from '../../shared/models';
-
-type EditUserInformationForm = {
-    firstName: string;
-    lastName: string;
-    address: string;
-    age: string;
-}
+import { returnErrorsIfInvalid } from '../../shared/validation';
+import { EditUserInformationForm } from './request';
 
 export async function updateUser(event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) {
     const parsedBody: EditUserInformationForm = JSON.parse(event.body);
     const tokenData = await verifyToken(event.headers.authorization);
+
+    await returnErrorsIfInvalid(parsedBody, EditUserInformationForm, callback);
 
     const user = await getByEmail('Users', tokenData.email).then((user) => {
         // @ts-ignore
