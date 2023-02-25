@@ -45,15 +45,12 @@ export const getByField = async (tableName: string, fieldName: string, fieldValu
 
     try {
         return await ddb
-            .query({
+            .scan({
                 TableName: tableName,
-                KeyConditionExpression: `${fieldName} = :a`,
-                ExpressionAttributeValues: {
-                    ":a": `${fieldValue}`
-                }
-
+                FilterExpression: `${fieldName} = :field`,
+                ExpressionAttributeValues: { ':field': fieldValue }
             })
-            .promise();;
+            .promise();
     } catch (err) {
         console.error(err);
     }
@@ -61,7 +58,6 @@ export const getByField = async (tableName: string, fieldName: string, fieldValu
 }
 
 export const postItem = async (tableName: string, itemToPost: any) => {
-    console.log(itemToPost);
     const parameters = {
         TableName: tableName,
         Item: itemToPost

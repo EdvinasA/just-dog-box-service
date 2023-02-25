@@ -104,3 +104,9 @@ functions:
       - httpApi:
           path: /animal
           method: post
+  getAnimals:
+    handler: lib/animal/get-animals/controller.handler
+    events:
+      - httpApi:
+          path: /animal
+          method: get
