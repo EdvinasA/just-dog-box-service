@@ -61,6 +61,7 @@ export const getByField = async (tableName: string, fieldName: string, fieldValu
 }
 
 export const postItem = async (tableName: string, itemToPost: any) => {
+    console.log(itemToPost);
     const parameters = {
         TableName: tableName,
         Item: itemToPost

@@ -26,7 +26,8 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
     "dotenv-cli": "7.0.0",
-    "jsonwebtoken": "9.0.0"
+    "jsonwebtoken": "9.0.0",
+    "uuidv4": "^6.2.13"
   },
   "scripts": {
     "start": "dotenv -e .env.local serverless offline",

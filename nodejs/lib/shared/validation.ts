@@ -18,7 +18,7 @@ export async function returnErrorsIfInvalid<T extends object>(
     requestBody: unknown,
     targetClass: ClassConstructor<T>,
     callback: APIGatewayProxyCallback
-): Promise<void> {
+): Promise<ValidationError[]> {
     const options = {
         ...defaultValidatorOptions
     };
@@ -32,7 +32,7 @@ export async function returnErrorsIfInvalid<T extends object>(
     if (errors.length > 0) {
         callback(null, { statusCode: 400, body: JSON.stringify(errors) });
     }
-    return;
+    return errors;
 }
 
 export async function validateObject<T extends object>(
