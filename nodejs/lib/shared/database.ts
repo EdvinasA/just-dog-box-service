@@ -69,3 +69,20 @@ export const postItem = async (tableName: string, itemToPost: any) => {
         console.error(err);
     }
 }
+
+export const deleteItem = async (tableName: string, itemId: string, sortKey: string) => {
+    console.log(itemId);
+    const parameters = {
+        Key: {
+            'id': itemId,
+            'email': sortKey
+        },
+        TableName: tableName,
+    };
+
+    try {
+        await ddb.delete(parameters).promise();
+    } catch (err) {
+        console.error(err);
+    }
+}

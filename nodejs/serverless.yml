@@ -110,3 +110,9 @@ functions:
       - httpApi:
           path: /animal
           method: get
+  deleteAnimal:
+    handler: lib/animal/delete-animal/controller.handler
+    events:
+      - httpApi:
+          path: /animal/{id}
+          method: delete
