@@ -28,7 +28,7 @@ export async function register(event: APIGatewayEvent, context: Context, callbac
         lastName: parsedBody.lastName,
         password: await encryptData(parsedBody.password),
         address: '',
-        age: ''
+        age: parsedBody.birthdayDate
     })
         .then(() => {
             return signToken(parsedBody.email);

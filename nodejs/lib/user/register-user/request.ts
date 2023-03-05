@@ -10,4 +10,6 @@ export class RegisterForm {
     email: string;
     @IsDefined()
     password: string;
+    @IsDefined()
+    birthdayDate: string;
 }
