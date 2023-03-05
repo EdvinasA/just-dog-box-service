@@ -71,7 +71,6 @@ export const postItem = async (tableName: string, itemToPost: any) => {
 }
 
 export const deleteItem = async (tableName: string, itemId: string, sortKey: string) => {
-    console.log(itemId);
     const parameters = {
         Key: {
             'id': itemId,
